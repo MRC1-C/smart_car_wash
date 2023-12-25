@@ -1,5 +1,6 @@
 'use client'
 import dynamic from 'next/dynamic';
+import { Button } from "@/components/ui/button"
 
 // Dynamic import for client-side only components
 const ChartArea = dynamic(() => import('@/components/chart/ChartArea'), { ssr: false }
@@ -16,41 +17,61 @@ import React, { useEffect, useState } from 'react'
 
 const Statistical = () => {
   const [succes, setSucces] = useState(false)
+  const [isStart, setIsStart] = useState(false)
+  const [isWater, setIsWarter] = useState(false)
+  const [isWater1, setIsWarter1] = useState(false)
+
+
   const route = useRouter()
-  useEffect(() => {
-    setSucces(false)
-    setTimeout(() => {
-      setSucces(true)
-      setTimeout(() => {
-        route.push('/')
-      }, 2000)
-    }, 5000)
-  }, [route])
   return (
     <div className='grid grid-cols-3 gap-3 h-screen p-3 bg-gray-100'>
       <div className='col-span-2 flex flex-col gap-3'>
         <div className='grid grid-cols-3 h-1/2 gap-3'>
           <div className='bg-white h-full flex flex-col items-center ring-1 ring-purple-500 rounded-lg shadow-lg'>
-            <div className='font-semibold'>Lượng nước</div>
+            <div className='font-semibold'>Thời gian vào</div>
             <div className='h-full'>
+              <div className='h-full flex items-center justify-center'>
+                <div className='text-[90px] font-bold'>9:00</div>
+              </div>
+            </div>
+          </div>
+          <div className='bg-white h-full flex flex-col items-center ring-1 ring-purple-500 rounded-lg shadow-lg'>
+            <div className='font-semibold'>Thời gian rửa xe</div>
+            {
+              isStart && !isWater && !isWater1 ?
+                <div className='h-full'>
+                  <div className='h-full flex items-center justify-center'>
+                    <div className='text-[90px] font-bold'>16p</div>
+                  </div>
+                </div> :
+                <div className='flex flex-col gap-6 h-full justify-center items-center'>
+                  <div className={`ring-1 cursor-pointer ${!isWater ? 'ring-purple-500' : 'ring-yellow-500'} text-xl rounded-lg p-3 font-bold ${!isWater ? 'bg-purple-400' : 'bg-yellow-400'} text-white`}
+                    onClick={() => {
+                      setIsWarter(!isWater)
+                    }
+                    } >{!isWater ? 'Bật Nước' : 'Tắt Nước'} </div>
+                  <div className={`ring-1 cursor-pointer ${!isWater1 ? 'ring-purple-500' : 'ring-yellow-500'} text-xl rounded-lg p-3 font-bold ${!isWater1 ? 'bg-purple-400' : 'bg-yellow-400'} text-white`} onClick={() => {
+                    setIsStart(true)
+
+                    setIsWarter1(!isWater1)
+                    setSucces(false)
+                    setTimeout(() => {
+                      setTimeout(() => {
+                        route.push('/')
+                      }, 2000)
+                      setSucces(true)
+                    }, 5000)
+                  }
+                  }>{!isWater1 ? 'Bật Quạt' : 'Tắt Quặt'}</div>
+                </div>
+
+            }
+          </div>
+          <div className='bg-white h-full flex flex-col items-center ring-1 ring-purple-500 rounded-lg shadow-lg'>
+            <div className='font-semibold'>Dung lượng</div>
+            <div className='h-full w-full'>
               <div className='h-full'>
                 <ChartLiquid />
-              </div>
-            </div>
-          </div>
-          <div className='bg-white h-full flex flex-col items-center ring-1 ring-purple-500 rounded-lg shadow-lg'>
-            <div className='font-semibold'>Lượng nước</div>
-            <div className='h-full w-full'>
-              <div className='h-full w-full'>
-                <ChartLine2 />
-              </div>
-            </div>
-          </div>
-          <div className='bg-white h-full flex flex-col items-center ring-1 ring-purple-500 rounded-lg shadow-lg'>
-            <div className='font-semibold'>Lượng nước</div>
-            <div className='h-full w-full'>
-              <div className='h-full'>
-                <ChartArea />
               </div>
             </div>
           </div>

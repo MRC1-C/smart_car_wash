@@ -6,129 +6,54 @@ import { Line } from '@ant-design/plots';
 const ChartLine = () => {
   const data = [
     {
-      month: 'Jan',
+      time: '0',
       key: 'series1',
-      value: 125,
+      value: 30,
     },
     {
-      month: 'Jan',
-      key: 'series2',
-      value: 51,
-    },
-    {
-      month: 'Feb',
+      time: '2',
       key: 'series1',
-      value: 132,
+      value: 32,
     },
     {
-      month: 'Feb',
-      key: 'series2',
-      value: 91,
-    },
-    {
-      month: 'Mar',
+      time: '4',
       key: 'series1',
-      value: 141,
+      value: 30,
     },
     {
-      month: 'Mar',
-      key: 'series2',
-      value: 34,
-    },
-    {
-      month: 'Apr',
+      time: '6',
       key: 'series1',
-      value: 158,
+      value: 31,
     },
     {
-      month: 'Apr',
-      key: 'series2',
-      value: 47,
-    },
-    {
-      month: 'May',
+      time: '8',
       key: 'series1',
-      value: 133,
+      value: 30,
     },
     {
-      month: 'May',
-      key: 'series2',
-      value: 63,
-    },
-    {
-      month: 'June',
+      time: '10',
       key: 'series1',
-      value: 143,
+      value: 40,
     },
     {
-      month: 'June',
-      key: 'series2',
-      value: 58,
-    },
-    {
-      month: 'July',
+      time: '12',
       key: 'series1',
-      value: 176,
+      value: 30,
     },
     {
-      month: 'July',
-      key: 'series2',
-      value: 56,
-    },
-    {
-      month: 'Aug',
+      time: '14',
       key: 'series1',
-      value: 194,
+      value: 20,
     },
     {
-      month: 'Aug',
-      key: 'series2',
-      value: 77,
-    },
-    {
-      month: 'Sep',
+      time: '16',
       key: 'series1',
-      value: 115,
-    },
-    {
-      month: 'Sep',
-      key: 'series2',
-      value: 99,
-    },
-    {
-      month: 'Oct',
-      key: 'series1',
-      value: 134,
-    },
-    {
-      month: 'Oct',
-      key: 'series2',
-      value: 106,
-    },
-    {
-      month: 'Nov',
-      key: 'series1',
-      value: 110,
-    },
-    {
-      month: 'Nov',
-      key: 'series2',
-      value: 88,
-    },
-    {
-      month: 'Dec',
-      key: 'series1',
-      value: 91,
-    },
-    {
-      month: 'Dec',
-      key: 'series2',
-      value: 56,
-    },
+      value: 0,
+    }
   ];
   const config = {
     data,
-    xField: 'month',
+    xField: 'time',
     yField: 'value',
     legend: false,
     seriesField: 'key',
