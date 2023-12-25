@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils"
 
 
 export const fontSans = Quicksand({
-  subsets: ["latin"],
+  subsets: ["vietnamese"],
   variable: "--font-sans",
 })
 export const metadata: Metadata = {
@@ -21,8 +21,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={fontSans.className}
-      >{children}</body>
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          fontSans.variable
+        )}      >{children}</body>
     </html>
   )
 }

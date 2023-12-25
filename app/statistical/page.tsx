@@ -1,8 +1,16 @@
 'use client'
-import ChartArea from '@/components/chart/ChartArea'
-import ChartLine from '@/components/chart/ChartLine'
-import ChartLine2 from '@/components/chart/ChartLine2'
-import ChartLiquid from '@/components/chart/ChartLiquid'
+import dynamic from 'next/dynamic';
+
+// Dynamic import for client-side only components
+const ChartArea = dynamic(() => import('@/components/chart/ChartArea'), { ssr: false }
+);
+const ChartLine = dynamic(() => import('@/components/chart/ChartLine'), { ssr: false }
+);
+const ChartLine2 = dynamic(() => import('@/components/chart/ChartLine2'), { ssr: false }
+);
+const ChartLiquid = dynamic(() => import('@/components/chart/ChartLiquid'), { ssr: false }
+);
+
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
