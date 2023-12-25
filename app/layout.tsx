@@ -1,10 +1,10 @@
 import type { Metadata } from 'next'
-import { Quicksand as FontSans } from "next/font/google"
+import { Quicksand } from "next/font/google"
 import './globals.css'
 import { cn } from "@/lib/utils"
 
 
-export const fontSans = FontSans({
+export const fontSans = Quicksand({
   subsets: ["latin"],
   variable: "--font-sans",
 })
