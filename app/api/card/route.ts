@@ -1,6 +1,19 @@
 import { NextResponse } from 'next/server';
 import client from '../prismadb';
 
+
+const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+}
+export async function OPTIONS(request: Request) {
+    return new Response(null, {
+        status: 204,
+        headers: corsHeaders
+    });
+}
+
 export async function GET(req: any) {
     const card_uid = req.nextUrl.searchParams.get('card_uid')
 
@@ -29,7 +42,7 @@ export async function GET(req: any) {
                         card_out: false
                     },
                 });
-                return NextResponse.json({ message: `login ${card_uid}` })
+                return NextResponse.json({ message: `login ${card_uid}` }, { status: 200, headers: corsHeaders })
             } else {
                 // User logout
                 const currentTime = new Date().toLocaleTimeString('en-US', { hour12: false });
@@ -42,12 +55,12 @@ export async function GET(req: any) {
 
             }
         } else {
-            return NextResponse.json({ message: 'Invalid Card!' })
+            return NextResponse.json({ message: 'Invalid Card!' }, { status: 200, headers: corsHeaders })
 
         }
     } catch (error) {
         console.error('Error:', error);
-        return NextResponse.json({ message: 'Internal Server Error' })
+        return NextResponse.json({ message: 'Internal Server Error' }, { status: 500, headers: corsHeaders })
 
     }
 }
@@ -60,11 +73,11 @@ export async function POST(req: Request) {
                 card_uid: card_uid
             }
         })
-        return NextResponse.json({ message: 'Card ID' + card.card_uid })
+        return NextResponse.json({ message: 'Card ID' + card.card_uid }, { status: 200, headers: corsHeaders })
 
     } catch (error) {
         console.error('Error:', error);
-        return NextResponse.json({ message: 'Internal Server Error' })
+        return NextResponse.json({ message: 'Internal Server Error' }, { headers: corsHeaders, status: 500 })
 
     }
 }
