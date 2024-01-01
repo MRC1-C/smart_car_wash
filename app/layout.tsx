@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { Quicksand } from "next/font/google"
 import './globals.css'
 import { cn } from "@/lib/utils"
+import Provider from './Provider'
+import Navbar from './Navbar'
 
 
 export const fontSans = Quicksand({
@@ -22,9 +24,18 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased",
+          "h-screen bg-background font-sans antialiased",
           fontSans.variable
-        )}      >{children}</body>
+        )}      >
+        <Provider>
+          <div className='h-screen flex flex-col'>
+            <Navbar />
+            <div className='overflow-auto' style={{ height: 'calc(100vh - 72px)' }}>
+              {children}
+            </div>
+          </div>
+        </Provider>
+      </body>
     </html>
   )
 }

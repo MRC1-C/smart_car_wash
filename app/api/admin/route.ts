@@ -4,7 +4,6 @@ import client from '../prismadb';
 export async function GET(req: any) {
 
     try {
-        // Check if the user exists
         const userLog = await client.userLog.findMany()
         return NextResponse.json(userLog)
     } catch (error) {

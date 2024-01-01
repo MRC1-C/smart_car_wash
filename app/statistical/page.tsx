@@ -1,6 +1,8 @@
 'use client'
 import dynamic from 'next/dynamic';
 import { Button } from "@/components/ui/button"
+import mqtt from 'mqtt';
+
 
 // Dynamic import for client-side only components
 const ChartArea = dynamic(() => import('@/components/chart/ChartArea'), { ssr: false }
@@ -14,17 +16,52 @@ const ChartLiquid = dynamic(() => import('@/components/chart/ChartLiquid'), { ss
 
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
+import axios from 'axios';
+import Image from 'next/image';
 
 const Statistical = () => {
   const [succes, setSucces] = useState(false)
   const [isStart, setIsStart] = useState(false)
   const [isWater, setIsWarter] = useState(false)
   const [isWater1, setIsWarter1] = useState(false)
+  const [client, setClient] = useState<any>(null);
+
+  useEffect(() => {
+    const client = mqtt.connect('mqtt://test.mosquitto.org:8081', {
+      username: '',
+      password: '',
+      clientId: 'nextjs',
+      reconnectPeriod: 2000,
+    });
+
+    client.on('connect', () => {
+      console.log('Connected to MQTT broker');
+      client.subscribe('nguyet_doan');
+      client.subscribe('nguyet_doan_send');
+      client.subscribe('nguyet_doan_money');
+    });
+
+    client.on('message', (topic, message) => {
+      console.log(`Received message from topic ${topic}: ${message.toString()}`);
+
+    });
+
+    setClient(client);
+
+    return () => {
+      client.end();
+    };
+  }, []);
+  const sendMessage = (mess: string) => {
+    if (client) {
+      client.publish('nguyet_doan', mess);
+    }
+  };
 
 
   const route = useRouter()
   return (
-    <div className='grid grid-cols-3 gap-3 h-screen p-3 bg-gray-100'>
+    <div className='h-full grid grid-cols-3 gap-3 p-3 bg-gray-100'>
       <div className='col-span-2 flex flex-col gap-3'>
         <div className='grid grid-cols-3 h-1/2 gap-3'>
           <div className='bg-white h-full flex flex-col items-center ring-1 ring-purple-500 rounded-lg shadow-lg'>
@@ -47,20 +84,25 @@ const Statistical = () => {
                 <div className='flex flex-col gap-6 h-full justify-center items-center'>
                   <div className={`ring-1 cursor-pointer ${!isWater ? 'ring-purple-500' : 'ring-yellow-500'} text-xl rounded-lg p-3 font-bold ${!isWater ? 'bg-purple-400' : 'bg-yellow-400'} text-white`}
                     onClick={() => {
+                      if (isWater == false) {
+                        sendMessage("RELAY1ON")
+                      }
+                      else {
+                        sendMessage("RELAY1OFF")
+                      }
                       setIsWarter(!isWater)
                     }
                     } >{!isWater ? 'Bật Nước' : 'Tắt Nước'} </div>
                   <div className={`ring-1 cursor-pointer ${!isWater1 ? 'ring-purple-500' : 'ring-yellow-500'} text-xl rounded-lg p-3 font-bold ${!isWater1 ? 'bg-purple-400' : 'bg-yellow-400'} text-white`} onClick={() => {
                     setIsStart(true)
-
+                    if (isWater1 == false) {
+                      sendMessage("RELAY2ON")
+                    }
+                    else {
+                      sendMessage("RELAY2OFF")
+                    }
                     setIsWarter1(!isWater1)
                     setSucces(false)
-                    setTimeout(() => {
-                      setTimeout(() => {
-                        route.push('/')
-                      }, 2000)
-                      setSucces(true)
-                    }, 5000)
                   }
                   }>{!isWater1 ? 'Bật Quạt' : 'Tắt Quặt'}</div>
                 </div>
@@ -88,14 +130,29 @@ const Statistical = () => {
         </div>
       </div>
       <div className='col-span-1 bg-white h-full flex flex-col items-center ring-1 ring-purple-500 rounded-lg shadow-lg'>
-        <div className='font-bold'>
-          Thanh toán bằng mã QR
-        </div>
-        <div className='text-sms'>
-          Tổng tiền là
-        </div>
-        <p className='font-bold text-purple-500'>100.000VNĐ</p>
-        <img src='/QR.svg' className='w-full aspect-square px-8' />
+
+        {
+          isStart == true && isWater == false && isWater1 == false ?
+            <div className='flex flex-col items-center'>
+              <div className='font-bold'>
+                Thanh toán bằng mã QR
+              </div>
+              <div className='text-sms'>
+                Tổng tiền là
+              </div>
+              <p className='font-bold text-purple-500'>100.000VNĐ</p>
+              <img src='/QR.svg' className='w-full aspect-square px-8' />
+            </div>
+            :
+            <div className='w-full p-8 flex flex-col items-center'>
+              <div className='font-bold'>
+                Đang rửa xe
+              </div>
+              <img src={'/washcar.gif'} alt='card' className='w-full aspect-square object-cover rounded-xl shadow-xl' />
+
+            </div>
+
+        }
         {
           succes && <div className='font-bold text-green-400 flex gap-2'>Bạn đã thanh toán thành công
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" className="w-6 h-6">
@@ -103,6 +160,14 @@ const Statistical = () => {
             </svg>
           </div>
         }
+        <Button onClick={() => {
+          setSucces(true)
+          axios.get('/api/card?card_uid=123')
+            .then(data => {
+              route.push('/')
+            })
+            .catch(err => console.log(err))
+        }}>Quét thẻ thảnh công</Button>
       </div>
     </div>
   )

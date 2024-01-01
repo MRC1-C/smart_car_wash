@@ -5,7 +5,9 @@ const nextConfig = {
      },
      eslint: {
         ignoreDuringBuilds: true,
-    }
+    },
+    serverComponentsExternalPackages: ['bcrypt']
+
 }
 
 module.exports = nextConfig
