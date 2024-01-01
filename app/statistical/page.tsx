@@ -27,7 +27,7 @@ const Statistical = () => {
   const [client, setClient] = useState<any>(null);
 
   useEffect(() => {
-    const client = mqtt.connect('mqtt://test.mosquitto.org:8081', {
+    const client = mqtt.connect('wss://test.mosquitto.org:8081', {
       username: '',
       password: '',
       clientId: 'nextjs',
