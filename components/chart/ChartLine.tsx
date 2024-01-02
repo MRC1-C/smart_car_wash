@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { Line } from '@ant-design/plots';
 
-const ChartLine = () => {
+const ChartLine = (props:any) => {
+  const [dt, setDt] = useState<Array<any>>([])
   const data = [
     {
       time: '0',
@@ -51,15 +52,35 @@ const ChartLine = () => {
       value: 0,
     }
   ];
+  function waitForOneSecond() {
+    return new Promise((resolve: any) => {
+      setTimeout(() => {
+        resolve();
+      }, 2000);
+    });
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      for (const d of data) {
+        console.log('first');
+        await waitForOneSecond();
+        setDt(prev => [...prev, d]);
+      }
+      console.log('All done!');
+    };
+    if(props.isWater){
+      fetchData();
+    }
+  }, [props.isWater])
   const config = {
-    data,
     xField: 'time',
     yField: 'value',
     legend: false,
     seriesField: 'key',
     stepType: 'hvh',
   };
-  return <Line {...config} />;
+  return <Line data={dt} {...config} />;
 };
 
 export default ChartLine

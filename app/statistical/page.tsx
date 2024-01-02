@@ -4,20 +4,15 @@ import { Button } from "@/components/ui/button"
 import mqtt from 'mqtt';
 
 
-// Dynamic import for client-side only components
-const ChartArea = dynamic(() => import('@/components/chart/ChartArea'), { ssr: false }
-);
 const ChartLine = dynamic(() => import('@/components/chart/ChartLine'), { ssr: false }
 );
-const ChartLine2 = dynamic(() => import('@/components/chart/ChartLine2'), { ssr: false }
-);
+
 const ChartLiquid = dynamic(() => import('@/components/chart/ChartLiquid'), { ssr: false }
 );
 
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
-import Image from 'next/image';
 
 const Statistical = () => {
   const [succes, setSucces] = useState(false)
@@ -139,8 +134,8 @@ const Statistical = () => {
             <div className='font-semibold'>Lượng nước</div>
             <div className='h-full w-full'>
               <div className='h-full'>
-                <ChartLine />
-              </div>
+                <ChartLine isWater={isWater}/>
+                           </div>
             </div>
           </div>
         </div>
