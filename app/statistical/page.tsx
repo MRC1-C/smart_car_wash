@@ -24,6 +24,8 @@ const Statistical = () => {
   const [isStart, setIsStart] = useState(false)
   const [isWater, setIsWarter] = useState(false)
   const [isWater1, setIsWarter1] = useState(false)
+  const [isWater2, setIsWarter2] = useState(false)
+
   const [client, setClient] = useState<any>(null);
 
   useEffect(() => {
@@ -38,10 +40,13 @@ const Statistical = () => {
       console.log('Connected to MQTT broker');
       client.subscribe('nguyet_doan');
       client.subscribe('nguyet_doan_send');
-      client.subscribe('nguyet_doan_money');
+      client.subscribe('nguyet_doan_v');
+
     });
 
     client.on('message', (topic, message) => {
+      if (topic == "nguyet_doan_v") {
+      }
       console.log(`Received message from topic ${topic}: ${message.toString()}`);
 
     });
@@ -75,7 +80,7 @@ const Statistical = () => {
           <div className='bg-white h-full flex flex-col items-center ring-1 ring-purple-500 rounded-lg shadow-lg'>
             <div className='font-semibold'>Thời gian rửa xe</div>
             {
-              isStart && !isWater && !isWater1 ?
+              isStart && !isWater && !isWater1 && !isWater2 ?
                 <div className='h-full'>
                   <div className='h-full flex items-center justify-center'>
                     <div className='text-[90px] font-bold'>16p</div>
@@ -92,19 +97,30 @@ const Statistical = () => {
                       }
                       setIsWarter(!isWater)
                     }
-                    } >{!isWater ? 'Bật Nước' : 'Tắt Nước'} </div>
-                  <div className={`ring-1 cursor-pointer ${!isWater1 ? 'ring-purple-500' : 'ring-yellow-500'} text-xl rounded-lg p-3 font-bold ${!isWater1 ? 'bg-purple-400' : 'bg-yellow-400'} text-white`} onClick={() => {
+                    } >{!isWater ? 'Bật Nước 1' : 'Tắt Nước 1'} </div>
+                  <div className={`ring-1 cursor-pointer ${!isWater1 ? 'ring-purple-500' : 'ring-yellow-500'} text-xl rounded-lg p-3 font-bold ${!isWater1 ? 'bg-purple-400' : 'bg-yellow-400'} text-white`}
+                    onClick={() => {
+                      if (isWater1 == false) {
+                        sendMessage("RELAY2ON")
+                      }
+                      else {
+                        sendMessage("RELAY2OFF")
+                      }
+                      setIsWarter1(!isWater1)
+                    }
+                    } >{!isWater1 ? 'Bật Nước 2' : 'Tắt Nước 2'} </div>
+                  <div className={`ring-1 cursor-pointer ${!isWater2 ? 'ring-purple-500' : 'ring-yellow-500'} text-xl rounded-lg p-3 font-bold ${!isWater2 ? 'bg-purple-400' : 'bg-yellow-400'} text-white`} onClick={() => {
                     setIsStart(true)
-                    if (isWater1 == false) {
-                      sendMessage("RELAY2ON")
+                    if (isWater2 == false) {
+                      sendMessage("RELAY3ON")
                     }
                     else {
-                      sendMessage("RELAY2OFF")
+                      sendMessage("RELAY3OFF")
                     }
-                    setIsWarter1(!isWater1)
+                    setIsWarter2(!isWater2)
                     setSucces(false)
                   }
-                  }>{!isWater1 ? 'Bật Quạt' : 'Tắt Quặt'}</div>
+                  }>{!isWater2 ? 'Bật Quạt' : 'Tắt Quạt'}</div>
                 </div>
 
             }
@@ -132,7 +148,7 @@ const Statistical = () => {
       <div className='col-span-1 bg-white h-full flex flex-col items-center ring-1 ring-purple-500 rounded-lg shadow-lg'>
 
         {
-          isStart == true && isWater == false && isWater1 == false ?
+          isStart == true && isWater == false && isWater1 == false && isWater2 == false ?
             <div className='flex flex-col items-center'>
               <div className='font-bold'>
                 Thanh toán bằng mã QR
