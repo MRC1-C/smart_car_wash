@@ -46,10 +46,6 @@ const Statistical = ({ params }: { params: { id: string } }) => {
       client.subscribe('nguyet_doan_send');
       client.subscribe('nguyet_doan_v');
       client.publish('nguyet_doan_v', 'hi');
-      setTimeout(() => {
-        client.publish('nguyet_doan_send', 'd');
-
-      }, 2000)
     });
 
     client.on('message', (topic, message) => {
