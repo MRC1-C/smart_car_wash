@@ -63,11 +63,9 @@ const ChartLine = (props:any) => {
   useEffect(() => {
     const fetchData = async () => {
       for (const d of data) {
-        console.log('first');
         await waitForOneSecond();
         setDt(prev => [...prev, d]);
       }
-      console.log('All done!');
     };
     if(props.isWater){
       fetchData();

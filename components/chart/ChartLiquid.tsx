@@ -3,9 +3,9 @@ import React from 'react';
 import { Liquid } from '@ant-design/plots';
 
 
-const ChartLiquid = () => {
+const ChartLiquid = (props:any) => {
   const config = {
-    percent: 0.25,
+    percent: props.v,
     outline: {
       border: 4,
       distance: 8,

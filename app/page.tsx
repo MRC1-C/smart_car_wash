@@ -5,24 +5,55 @@ import { Button } from '@/components/ui/button';
 import { redirect, useRouter } from 'next/navigation';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import mqtt from 'mqtt';
+import useStore from './store';
 
 
 export default function Home() {
   const router = useRouter()
-  const {data: session} = useSession()
-  useEffect(()=>{
-    if(session?.user.role == "ADMIN"){
+  const { data: session } = useSession()
+  const [client, setClient] = useState<any>(null);
+  const setTime = useStore((state:any) => state.setTime)
+  const setCard = useStore((state:any) => state.setCard)
+
+
+  useEffect(() => {
+    const client = mqtt.connect('wss://90ebf5e8f64841f897882d8fa2a557af.s2.eu.hivemq.cloud:8884/mqtt', {
+      username: 'slave',
+      password: 'Test1234',
+      clientId: 'nextjs',
+      reconnectPeriod: 2000,
+    });
+
+    client.on('connect', () => {
+      console.log('Connected to MQTT broker');
+      client.subscribe('rfid');
+    });
+
+    client.on('message', (topic, message) => {
+      console.log(`Received message from topic ${topic}: ${message.toString()}`);
+      axios.get('/api/card?card_uid=' + message.toString())
+        .then(data => {
+          setTime(data.data.id)
+          setCard(message.toString())
+          router.push('statistical')
+        })
+        .catch(err => console.log(err))
+    });
+
+    setClient(client);
+
+    return () => {
+      client.end();
+    };
+  }, []);
+  useEffect(() => {
+    if (session?.user.role == "ADMIN") {
       router.push('admin')
     }
-  },[session])
-  const onsubmit = () => {
-    axios.get('/api/card?card_uid=123')
-      .then(data => {
-        router.push('statistical')
-      })
-      .catch(err => console.log(err))
-  }
+  }, [session])
+
   return (
     <div className='h-full'>
       <main className="flex h-full mx-auto max-w-3xl flex-col items-center justify-between p-24">
@@ -33,7 +64,6 @@ export default function Home() {
           Hãy quẹt thẻ
         </div>
         <img src={'/Card.gif'} alt='card' className='w-full aspect-video object-cover rounded-lg' />
-        <Button onClick={onsubmit}>Quẹt thẻ</Button>
       </main>
 
     </div>

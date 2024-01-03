@@ -13,15 +13,23 @@ const ChartLiquid = dynamic(() => import('@/components/chart/ChartLiquid'), { ss
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
+import useStore from '../store';
 
-const Statistical = () => {
+const Statistical = ({ params }: { params: { id: string } }) => {
   const [succes, setSucces] = useState(false)
   const [isStart, setIsStart] = useState(false)
   const [isWater, setIsWarter] = useState(false)
   const [isWater1, setIsWarter1] = useState(false)
   const [isWater2, setIsWarter2] = useState(false)
+  const [isAuto, setIsAuto] = useState(false)
+  const [V, setV] = useState<any>(0)
+  const time = useStore((state: any) => state.time)
+  const card_uid = useStore((state: any) => state.card_uid)
+
 
   const [client, setClient] = useState<any>(null);
+
+
 
   useEffect(() => {
     const client = mqtt.connect('wss://test.mosquitto.org:8081', {
@@ -36,11 +44,35 @@ const Statistical = () => {
       client.subscribe('nguyet_doan');
       client.subscribe('nguyet_doan_send');
       client.subscribe('nguyet_doan_v');
+      client.publish('nguyet_doan_v', 'hi');
+      setTimeout(() => {
+        client.publish('nguyet_doan_send', 'd');
 
+      }, 2000)
     });
 
     client.on('message', (topic, message) => {
-      if (topic == "nguyet_doan_v") {
+      if (topic == "nguyet_doan_v" && message.toString() !== "hi") {
+        setV(message.toString())
+      }
+      if (topic == "nguyet_doan" && message.toString() == "ONWarter1") {
+        setIsWarter(false)
+      }
+      if (topic == "nguyet_doan" && message.toString() == "OFFWarter1") {
+        setIsWarter(true)
+      }
+      if (topic == "nguyet_doan" && message.toString() == "ONWarter2") {
+        setIsWarter1(false)
+      }
+      if (topic == "nguyet_doan" && message.toString() == "OFFWarter2") {
+        setIsWarter1(true)
+      }
+      if (topic == "nguyet_doan" && message.toString() == "ONWarter3") {
+        setIsWarter2(false)
+      }
+      if (topic == "nguyet_doan" && message.toString() == "OFFWarter3") {
+        setIsWarter2(true)
+        setSucces(false)
       }
       console.log(`Received message from topic ${topic}: ${message.toString()}`);
 
@@ -68,17 +100,17 @@ const Statistical = () => {
             <div className='font-semibold'>Thời gian vào</div>
             <div className='h-full'>
               <div className='h-full flex items-center justify-center'>
-                <div className='text-[90px] font-bold'>9:00</div>
+                <div className='text-[80px] font-bold'>{decodeURIComponent(time)}</div>
               </div>
             </div>
           </div>
           <div className='bg-white h-full flex flex-col items-center ring-1 ring-purple-500 rounded-lg shadow-lg'>
-            <div className='font-semibold'>Thời gian rửa xe</div>
+            <div className='font-semibold'>Thời gian rửa xong</div>
             {
               isStart && !isWater && !isWater1 && !isWater2 ?
                 <div className='h-full'>
                   <div className='h-full flex items-center justify-center'>
-                    <div className='text-[90px] font-bold'>16p</div>
+                    <div className='text-[90px] font-bold'>{new Date().toLocaleTimeString('en-US', { hour12: false })}</div>
                   </div>
                 </div> :
                 <div className='flex flex-col gap-6 h-full justify-center items-center'>
@@ -116,15 +148,22 @@ const Statistical = () => {
                     setSucces(false)
                   }
                   }>{!isWater2 ? 'Bật Quạt' : 'Tắt Quạt'}</div>
+                  <div className={`ring-1 cursor-pointer ${!isAuto ? 'ring-purple-500' : 'ring-yellow-500'} text-xl rounded-lg p-3 font-bold ${!isAuto ? 'bg-purple-400' : 'bg-yellow-400'} text-white`} onClick={() => {
+                    setIsAuto(true)
+                    sendMessage("auto")
+                  }
+                  }>{!isWater2 ? 'Tự động' : 'Tắt Quạt'}</div>
                 </div>
+
 
             }
           </div>
           <div className='bg-white h-full flex flex-col items-center ring-1 ring-purple-500 rounded-lg shadow-lg'>
-            <div className='font-semibold'>Dung lượng</div>
-            <div className='h-full w-full'>
-              <div className='h-full'>
-                <ChartLiquid />
+            <div className='font-semibold'>Thể tích xe</div>
+            <div className='h-full w-full flex justify-center items-center'>
+              <div className='font-bold text-8xl'>
+                {V}
+                {/* <ChartLiquid v={V}/> */}
               </div>
             </div>
           </div>
@@ -134,8 +173,8 @@ const Statistical = () => {
             <div className='font-semibold'>Lượng nước</div>
             <div className='h-full w-full'>
               <div className='h-full'>
-                <ChartLine isWater={isWater}/>
-                           </div>
+                <ChartLine isWater={isWater} />
+              </div>
             </div>
           </div>
         </div>
@@ -173,7 +212,7 @@ const Statistical = () => {
         }
         <Button onClick={() => {
           setSucces(true)
-          axios.get('/api/card?card_uid=123')
+          axios.get('/api/card?card_uid=' + card_uid)
             .then(data => {
               route.push('/')
             })

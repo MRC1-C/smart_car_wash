@@ -33,7 +33,7 @@ export async function GET(req: any) {
                 const currentDate = new Date().toISOString().slice(0, 10);
                 const currentTime = new Date().toLocaleTimeString('en-US', { hour12: false });
 
-                await client.userLog.create({
+                const userlof = await client.userLog.create({
                     data: {
                         card_uid,
                         checkindate: currentDate,
@@ -42,7 +42,7 @@ export async function GET(req: any) {
                         card_out: false
                     },
                 });
-                return NextResponse.json({ message: `login ${card_uid}` }, { status: 200, headers: corsHeaders })
+                return NextResponse.json({ message: `login ${card_uid}`, id: userlof.timein }, { status: 200, headers: corsHeaders })
             } else {
                 // User logout
                 const currentTime = new Date().toLocaleTimeString('en-US', { hour12: false });
