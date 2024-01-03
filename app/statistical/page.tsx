@@ -55,24 +55,25 @@ const Statistical = ({ params }: { params: { id: string } }) => {
       if (topic == "nguyet_doan_v" && message.toString() !== "hi") {
         setV(message.toString())
       }
-      if (topic == "nguyet_doan" && message.toString() == "ONWarter1") {
-        setIsWarter(false)
-      }
-      if (topic == "nguyet_doan" && message.toString() == "OFFWarter1") {
+      if (topic == "nguyet_doan" && message.toString() == "OnWarter1") {
         setIsWarter(true)
       }
-      if (topic == "nguyet_doan" && message.toString() == "ONWarter2") {
-        setIsWarter1(false)
+      if (topic == "nguyet_doan" && message.toString() == "OFFWarter1") {
+        setIsWarter(false)
       }
-      if (topic == "nguyet_doan" && message.toString() == "OFFWarter2") {
+      if (topic == "nguyet_doan" && message.toString() == "OnWarter2") {
         setIsWarter1(true)
       }
-      if (topic == "nguyet_doan" && message.toString() == "ONWarter3") {
-        setIsWarter2(false)
+      if (topic == "nguyet_doan" && message.toString() == "OFFWarter2") {
+        setIsWarter1(false)
+      }
+      if (topic == "nguyet_doan" && message.toString() == "OnWarter3") {
+        setIsWarter2(true)
       }
       if (topic == "nguyet_doan" && message.toString() == "OFFWarter3") {
-        setIsWarter2(true)
-        setSucces(false)
+        setIsWarter2(false)
+        setIsAuto(false)
+        setIsStart(true)
       }
       console.log(`Received message from topic ${topic}: ${message.toString()}`);
 
@@ -124,7 +125,7 @@ const Statistical = ({ params }: { params: { id: string } }) => {
                       }
                       setIsWarter(!isWater)
                     }
-                    } >{!isWater ? 'Bật Nước 1' : 'Tắt Nước 1'} </div>
+                    } >{!isWater ? 'Bật Nước' : 'Tắt Nước'} </div>
                   <div className={`ring-1 cursor-pointer ${!isWater1 ? 'ring-purple-500' : 'ring-yellow-500'} text-xl rounded-lg p-3 font-bold ${!isWater1 ? 'bg-purple-400' : 'bg-yellow-400'} text-white`}
                     onClick={() => {
                       if (isWater1 == false) {
@@ -135,7 +136,7 @@ const Statistical = ({ params }: { params: { id: string } }) => {
                       }
                       setIsWarter1(!isWater1)
                     }
-                    } >{!isWater1 ? 'Bật Nước 2' : 'Tắt Nước 2'} </div>
+                    } >{!isWater1 ? 'Bật Xà Phòng' : 'Tắt Xà Phòng'} </div>
                   <div className={`ring-1 cursor-pointer ${!isWater2 ? 'ring-purple-500' : 'ring-yellow-500'} text-xl rounded-lg p-3 font-bold ${!isWater2 ? 'bg-purple-400' : 'bg-yellow-400'} text-white`} onClick={() => {
                     setIsStart(true)
                     if (isWater2 == false) {
@@ -152,7 +153,7 @@ const Statistical = ({ params }: { params: { id: string } }) => {
                     setIsAuto(true)
                     sendMessage("auto")
                   }
-                  }>{!isWater2 ? 'Tự động' : 'Tắt Quạt'}</div>
+                  }>{'Tự động'}</div>
                 </div>
 
 
@@ -190,7 +191,7 @@ const Statistical = ({ params }: { params: { id: string } }) => {
               <div className='text-sms'>
                 Tổng tiền là
               </div>
-              <p className='font-bold text-purple-500'>100.000VNĐ</p>
+              <p className='font-bold text-purple-500'>{V >= 0 && V < 2 ? "20.000" : (V >= 2 && V < 5 ? "30.000" : "50.000")}VNĐ</p>
               <img src='/QR.svg' className='w-full aspect-square px-8' />
             </div>
             :
