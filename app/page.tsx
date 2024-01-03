@@ -13,7 +13,6 @@ import useStore from './store';
 export default function Home() {
   const router = useRouter()
   const { data: session } = useSession()
-  const [client, setClient] = useState<any>(null);
   const setTime = useStore((state:any) => state.setTime)
   const setCard = useStore((state:any) => state.setCard)
 
@@ -37,12 +36,11 @@ export default function Home() {
         .then(data => {
           setTime(data.data.id)
           setCard(message.toString())
-          router.push('statistical')
+          router.push('/statistical')
         })
         .catch(err => console.log(err))
     });
 
-    setClient(client);
 
     return () => {
       client.end();
