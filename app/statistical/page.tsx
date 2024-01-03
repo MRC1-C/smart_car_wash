@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import useStore from '../store';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const Statistical = ({ params }: { params: { id: string } }) => {
   const [succes, setSucces] = useState(false)
@@ -22,7 +23,7 @@ const Statistical = ({ params }: { params: { id: string } }) => {
   const [isWater1, setIsWarter1] = useState(false)
   const [isWater2, setIsWarter2] = useState(false)
   const [isAuto, setIsAuto] = useState(false)
-  const [V, setV] = useState<any>(0)
+  const [V, setV] = useState<any>()
   const time = useStore((state: any) => state.time)
   const card_uid = useStore((state: any) => state.card_uid)
 
@@ -101,7 +102,7 @@ const Statistical = ({ params }: { params: { id: string } }) => {
             <div className='font-semibold'>Thời gian vào</div>
             <div className='h-full'>
               <div className='h-full flex items-center justify-center'>
-                <div className='text-[80px] font-bold'>{decodeURIComponent(time)}</div>
+                <div className='text-[80px] font-bold'>{decodeURIComponent(time).slice(0,5)}</div>
               </div>
             </div>
           </div>
@@ -111,7 +112,7 @@ const Statistical = ({ params }: { params: { id: string } }) => {
               isStart && !isWater && !isWater1 && !isWater2 ?
                 <div className='h-full'>
                   <div className='h-full flex items-center justify-center'>
-                    <div className='text-[90px] font-bold'>{new Date().toLocaleTimeString('en-US', { hour12: false })}</div>
+                    <div className='text-[90px] font-bold'>{(new Date().toLocaleTimeString('en-US', { hour12: false }).slice(0,5))}</div>
                   </div>
                 </div> :
                 <div className='flex flex-col gap-6 h-full justify-center items-center'>
@@ -162,10 +163,16 @@ const Statistical = ({ params }: { params: { id: string } }) => {
           <div className='bg-white h-full flex flex-col items-center ring-1 ring-purple-500 rounded-lg shadow-lg'>
             <div className='font-semibold'>Thể tích xe</div>
             <div className='h-full w-full flex justify-center items-center'>
+              {
+                V?
               <div className='font-bold text-8xl'>
                 {V}
-                {/* <ChartLiquid v={V}/> */}
+              </div>:
+              <div className='flex flex-col justify-center items-center'>
+                <p className='text-lg self-center'>Đang tính</p>
+                <p className='text-xl font-bold'>Thể tích xe</p>
               </div>
+              }
             </div>
           </div>
         </div>
