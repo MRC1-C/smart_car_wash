@@ -195,7 +195,7 @@ const Statistical = ({ params }: { params: { id: string } }) => {
                 Tổng tiền là
               </div>
               <p className='font-bold text-purple-500'>{V >= 0 && V < 2 ? "20.000" : (V >= 2 && V < 5 ? "30.000" : "50.000")}VNĐ</p>
-              <img src='/QR.svg' className='w-full aspect-square px-8' />
+              <img src={`https://img.vietqr.io/image/vietinbank-113366668888-compact2.jpg?amount=${V >= 0 && V < 2 ? "20000" : (V >= 2 && V < 5 ? "30000" : "50000")}&addInfo=dong%20qop%20quy%20vac%20xin&accountName=Quy%20Vac%20Xin%20Covid`} className='w-full aspect-square px-8' />
             </div>
             :
             <div className='w-full p-8 flex flex-col items-center'>
@@ -221,7 +221,7 @@ const Statistical = ({ params }: { params: { id: string } }) => {
               route.push('/')
             })
             .catch(err => console.log(err))
-        }}>Quét thẻ thảnh công</Button>
+        }}>Thanh toán</Button>
       </div>
     </div>
   )
