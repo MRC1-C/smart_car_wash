@@ -43,7 +43,6 @@ const Statistical = ({ params }: { params: { id: string } }) => {
     client.on('connect', () => {
       console.log('Connected to MQTT broker');
       client.subscribe('nguyet_doan');
-      client.subscribe('nguyet_doan_send');
       client.subscribe('nguyet_doan_v');
       client.publish('nguyet_doan_v', 'hi');
     });
@@ -98,7 +97,7 @@ const Statistical = ({ params }: { params: { id: string } }) => {
             <div className='font-semibold'>Thời gian vào</div>
             <div className='h-full'>
               <div className='h-full flex items-center justify-center'>
-                <div className='text-[80px] font-bold'>{decodeURIComponent(time).slice(0,5)}</div>
+                <div className='text-[80px] font-bold'>{decodeURIComponent(time)}</div>
               </div>
             </div>
           </div>
@@ -108,7 +107,7 @@ const Statistical = ({ params }: { params: { id: string } }) => {
               isStart && !isWater && !isWater1 && !isWater2 ?
                 <div className='h-full'>
                   <div className='h-full flex items-center justify-center'>
-                    <div className='text-[90px] font-bold'>{(new Date().toLocaleTimeString('en-US', { hour12: false }).slice(0,5))}</div>
+                    <div className='text-[90px] font-bold'>{new Date().toLocaleTimeString('en-US', { hour12: false })}</div>
                   </div>
                 </div> :
                 <div className='flex flex-col gap-6 h-full justify-center items-center'>
