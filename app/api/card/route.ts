@@ -25,13 +25,14 @@ export async function GET(req: any) {
 
         if (user) {
             const log = await client.userLog.findFirst({
-                where: { card_uid, checkindate: new Date().toISOString().slice(0, 10), card_out: false },
+                where: { card_uid, checkindate: new Date().toLocaleString("en-US", { timeZone: "Asia/Ho_Chi_Minh", dateStyle: "short" }), card_out: false },
             });
 
             if (!log) {
                 // User login
-                const currentDate = new Date().toISOString().slice(0, 10);
-                const currentTime = new Date().toLocaleTimeString('en-US', { hour12: false });
+                const currentDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Ho_Chi_Minh", dateStyle: "short" });
+                const currentTime = new Date().toLocaleTimeString('en-US', { timeZone: "Asia/Ho_Chi_Minh", hour12: false });
+
 
                 const userlof = await client.userLog.create({
                     data: {
@@ -45,7 +46,7 @@ export async function GET(req: any) {
                 return NextResponse.json({ message: `login ${card_uid}`, id: userlof.timein }, { status: 200, headers: corsHeaders })
             } else {
                 // User logout
-                const currentTime = new Date().toLocaleTimeString('en-US', { hour12: false });
+                const currentTime = new Date().toLocaleTimeString('en-US', { timeZone: "Asia/Ho_Chi_Minh", hour12: false });
 
                 await client.userLog.update({
                     where: { id: log.id, card_out: false },

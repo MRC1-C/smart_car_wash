@@ -97,7 +97,7 @@ const Statistical = ({ params }: { params: { id: string } }) => {
             <div className='font-semibold'>Thời gian vào</div>
             <div className='h-full'>
               <div className='h-full flex items-center justify-center'>
-                <div className='text-[80px] font-bold'>{decodeURIComponent(time)}</div>
+                <div className='text-[70px] font-bold'>{decodeURIComponent(time)}</div>
               </div>
             </div>
           </div>
@@ -107,7 +107,7 @@ const Statistical = ({ params }: { params: { id: string } }) => {
               isStart && !isWater && !isWater1 && !isWater2 ?
                 <div className='h-full'>
                   <div className='h-full flex items-center justify-center'>
-                    <div className='text-[90px] font-bold'>{new Date().toLocaleTimeString('en-US', { hour12: false })}</div>
+                    <div className='text-[70px] font-bold'>{new Date().toLocaleTimeString('en-US', { timeZone: "Asia/Ho_Chi_Minh", hour12: false })}</div>
                   </div>
                 </div> :
                 <div className='flex flex-col gap-6 h-full justify-center items-center'>
@@ -160,7 +160,7 @@ const Statistical = ({ params }: { params: { id: string } }) => {
             <div className='h-full w-full flex justify-center items-center'>
               {
                 V?
-              <div className='font-bold text-8xl'>
+              <div className='font-bold text-[80px]'>
                 {V}
               </div>:
               <div className='flex flex-col justify-center items-center'>
