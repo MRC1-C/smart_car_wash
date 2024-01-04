@@ -52,7 +52,7 @@ const Statistical = ({ params }: { params: { id: string } }) => {
         setV(message.toString())
       }
       if (topic == "nguyet_doan" && message.toString() == "OnWarter1") {
-        setIsWarter(true)
+        setIsWarter(true) 
       }
       if (topic == "nguyet_doan" && message.toString() == "OFFWarter1") {
         setIsWarter(false)
@@ -99,7 +99,7 @@ const Statistical = ({ params }: { params: { id: string } }) => {
             <div className='font-semibold'>Thời gian vào</div>
             <div className='h-full'>
               <div className='h-full flex items-center justify-center'>
-                <div className='text-[70px] font-bold'>{decodeURIComponent(time)}</div>
+                <div className='text-[70px] font-bold'>{time}</div>
               </div>
             </div>
           </div>

@@ -35,6 +35,7 @@ export default function Home() {
       axios.get('/api/card?card_uid=' + message.toString())
         .then(data => {
           setTime(data.data.id)
+          console.log(data)
           setCard(message.toString())
           router.push('/statistical')
         })
