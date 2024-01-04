@@ -33,21 +33,21 @@ const Statistical = ({ params }: { params: { id: string } }) => {
 
 
   useEffect(() => {
-    const client = mqtt.connect('wss://test.mosquitto.org:8081', {
+    const clt = mqtt.connect('wss://test.mosquitto.org:8081', {
       username: '',
       password: '',
       clientId: 'nextjs',
       reconnectPeriod: 2000,
     });
 
-    client.on('connect', () => {
+    clt.on('connect', () => {
       console.log('Connected to MQTT broker');
       client.subscribe('nguyet_doan');
       client.subscribe('nguyet_doan_v');
       client.publish('nguyet_doan_v', 'hi');
     });
 
-    client.on('message', (topic, message) => {
+    clt.on('message', (topic, message) => {
       if (topic == "nguyet_doan_v" && message.toString() !== "hi") {
         setV(message.toString())
       }
@@ -75,10 +75,12 @@ const Statistical = ({ params }: { params: { id: string } }) => {
 
     });
 
-    setClient(client);
+    setClient(clt);
 
     return () => {
-      client.end();
+      if(client){
+        client.end();
+      }
     };
   }, []);
   const sendMessage = (mess: string) => {
