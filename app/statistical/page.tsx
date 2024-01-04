@@ -39,7 +39,9 @@ const Statistical = ({ params }: { params: { id: string } }) => {
       console.log('Connected to MQTT broker');
       clt.subscribe('nguyet_doan');
       clt.subscribe('nguyet_doan_v');
-      clt.publish('nguyet_doan_v', 'hi');
+      setTimeout(()=>{
+        clt.publish('nguyet_doan_v', 'hi');
+      },2000)
     });
 
     clt.on('message', (topic, message) => {
