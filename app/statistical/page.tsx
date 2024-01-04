@@ -7,15 +7,9 @@ import mqtt from 'mqtt';
 const ChartLine = dynamic(() => import('@/components/chart/ChartLine'), { ssr: false }
 );
 
-const ChartLiquid = dynamic(() => import('@/components/chart/ChartLiquid'), { ssr: false }
-);
-
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
-import useStore from '../store';
-import { Skeleton } from '@/components/ui/skeleton';
-
 const Statistical = ({ params }: { params: { id: string } }) => {
   const [succes, setSucces] = useState(false)
   const [isStart, setIsStart] = useState(false)
@@ -24,8 +18,9 @@ const Statistical = ({ params }: { params: { id: string } }) => {
   const [isWater2, setIsWarter2] = useState(false)
   const [isAuto, setIsAuto] = useState(false)
   const [V, setV] = useState<any>()
-  const time = useStore((state: any) => state.time)
-  const card_uid = useStore((state: any) => state.card_uid)
+  const searchParams = useSearchParams()
+  const [time, setTime] = useState(searchParams.get('time'))
+  const [card, setCard] = useState(searchParams.get('card'))
 
 
   const [client, setClient] = useState<any>(null);
@@ -42,9 +37,9 @@ const Statistical = ({ params }: { params: { id: string } }) => {
 
     clt.on('connect', () => {
       console.log('Connected to MQTT broker');
-      client.subscribe('nguyet_doan');
-      client.subscribe('nguyet_doan_v');
-      client.publish('nguyet_doan_v', 'hi');
+      clt.subscribe('nguyet_doan');
+      clt.subscribe('nguyet_doan_v');
+      clt.publish('nguyet_doan_v', 'hi');
     });
 
     clt.on('message', (topic, message) => {
@@ -52,7 +47,7 @@ const Statistical = ({ params }: { params: { id: string } }) => {
         setV(message.toString())
       }
       if (topic == "nguyet_doan" && message.toString() == "OnWarter1") {
-        setIsWarter(true) 
+        setIsWarter(true)
       }
       if (topic == "nguyet_doan" && message.toString() == "OFFWarter1") {
         setIsWarter(false)
@@ -78,7 +73,7 @@ const Statistical = ({ params }: { params: { id: string } }) => {
     setClient(clt);
 
     return () => {
-      if(client){
+      if (client) {
         client.end();
       }
     };
@@ -161,14 +156,14 @@ const Statistical = ({ params }: { params: { id: string } }) => {
             <div className='font-semibold'>Thể tích xe</div>
             <div className='h-full w-full flex justify-center items-center'>
               {
-                V?
-              <div className='font-bold text-[80px]'>
-                {V}
-              </div>:
-              <div className='flex flex-col justify-center items-center'>
-                <p className='text-lg self-center'>Đang tính</p>
-                <p className='text-xl font-bold'>Thể tích xe</p>
-              </div>
+                V ?
+                  <div className='font-bold text-[80px]'>
+                    {V}
+                  </div> :
+                  <div className='flex flex-col justify-center items-center'>
+                    <p className='text-lg self-center'>Đang tính</p>
+                    <p className='text-xl font-bold'>Thể tích xe</p>
+                  </div>
               }
             </div>
           </div>
@@ -217,7 +212,7 @@ const Statistical = ({ params }: { params: { id: string } }) => {
         }
         <Button onClick={() => {
           setSucces(true)
-          axios.get('/api/card?card_uid=' + card_uid)
+          axios.get('/api/card?card_uid=' + card)
             .then(data => {
               route.push('/')
             })

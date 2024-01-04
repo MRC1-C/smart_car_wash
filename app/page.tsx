@@ -13,8 +13,8 @@ import useStore from './store';
 export default function Home() {
   const router = useRouter()
   const { data: session } = useSession()
-  const setTime = useStore((state:any) => state.setTime)
-  const setCard = useStore((state:any) => state.setCard)
+  const setTime = useStore((state: any) => state.setTime)
+  const setCard = useStore((state: any) => state.setCard)
 
 
   useEffect(() => {
@@ -33,11 +33,8 @@ export default function Home() {
     client.on('message', (topic, message) => {
       console.log(`Received message from topic ${topic}: ${message.toString()}`);
       axios.get('/api/card?card_uid=' + message.toString())
-        .then(data => {
-          setTime(data.data.id)
-          console.log(data)
-          setCard(message.toString())
-          router.push('/statistical')
+        .then((data: any) => {
+          router.push('/statistical?time=' + data.data.id + "&&card=" + message)
         })
         .catch(err => console.log(err))
     });
