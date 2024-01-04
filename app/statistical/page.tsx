@@ -158,7 +158,7 @@ const Statistical = ({ params }: { params: { id: string } }) => {
               {
                 V ?
                   <div className='font-bold text-[80px]'>
-                    {V}
+                    {V.split('.')[0]}
                   </div> :
                   <div className='flex flex-col justify-center items-center'>
                     <p className='text-lg self-center'>Đang tính</p>
@@ -190,8 +190,8 @@ const Statistical = ({ params }: { params: { id: string } }) => {
               <div className='text-sms'>
                 Tổng tiền là
               </div>
-              <p className='font-bold text-purple-500'>{V >= 0 && V < 2 ? "20.000" : (V >= 2 && V < 5 ? "30.000" : "50.000")}VNĐ</p>
-              <img src={`https://img.vietqr.io/image/vietinbank-113366668888-compact2.jpg?amount=${V >= 0 && V < 2 ? "20000" : (V >= 2 && V < 5 ? "30000" : "50000")}&addInfo=dong%20qop%20quy%20vac%20xin&accountName=Quy%20Vac%20Xin%20Covid`} className='w-full aspect-square px-8' />
+              <p className='font-bold text-purple-500'>{V >= 0 && V < 10000 ? "100.000" : (V >= 10000 && V < 20000 ? "150.000" : "200.000")}VNĐ</p>
+              <img src={`https://img.vietqr.io/image/vietinbank-113366668888-compact2.jpg?amount=${V >= 0 && V < 10000 ? "100000" : (V >= 10000 && V < 20000 ? "150000" : "200000")}&addInfo=dong%20qop%20quy%20vac%20xin&accountName=Quy%20Vac%20Xin%20Covid`} className='w-full aspect-square px-8' />
             </div>
             :
             <div className='w-full p-8 flex flex-col items-center'>
